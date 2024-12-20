@@ -4,17 +4,24 @@
 
 package frc.robot;
 
+import org.team1502.configuration.factory.RobotConfiguration;
+import org.team1502.injection.RobotFactory;
+
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.hardware.SwerveBot;
 
 public class RobotContainer {
-  public RobotContainer() {
-    configureBindings();
-  }
+    public RobotContainer() {
+        RobotConfiguration config = SwerveBot.buildRobot();
+        RobotFactory factory = RobotFactory.Create(Robot.class, config);
+        
+        configureBindings();
+    }
 
-  private void configureBindings() {}
+    private void configureBindings() {}
 
-  public Command getAutonomousCommand() {
-    return Commands.print("No autonomous command configured");
-  }
+    public Command getAutonomousCommand() {
+        return Commands.print("No autonomous command configured");
+    }
 }
