@@ -21,7 +21,11 @@ import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class Inventory {
-        public static void Motors(PartFactory inventory) {inventory
+    public static PartFactory Sensors(PartFactory inventory) {return inventory
+        .Pigeon2(p->p);
+    }
+
+    public static PartFactory Motors(PartFactory inventory) {return inventory
         .Motor(Motor.NEO, m -> m
             .MotorType(MotorType.kBrushless)
             .FreeSpeedRPM(5_820.0) // from MK4i docs, see data sheet for empirical values
@@ -36,7 +40,7 @@ public class Inventory {
         );
     }
 
-    public static void Mk4iL3(PartFactory inventory) {inventory
+    public static PartFactory Mk4iL3(PartFactory inventory) { return inventory
         .SwerveModule(sm -> sm
             .CANCoder(cc -> cc)
             .TurningMotor(Manufacturer.REVRobotics, mc -> mc

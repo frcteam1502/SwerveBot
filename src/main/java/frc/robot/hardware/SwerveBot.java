@@ -2,6 +2,8 @@ package frc.robot.hardware;
 
 import org.team1502.configuration.factory.RobotConfiguration;
 
+import frc.robot.subsystems.DriveSubsystem;
+
 public class SwerveBot {
 
     public static RobotConfiguration buildRobot() {
@@ -14,25 +16,29 @@ public class SwerveBot {
         ));
 
         return robotConfiguration.Build(builder->builder
-        .SwerveDrive(sd->sd
-            .Chassis(c -> c
-                .Square(19.75) // for wheel distances
-                .Frame(25.25) // PathPlanner needs the full frame
-                .WheelDiameter(4.0)
+            .Subsystem(DriveSubsystem.class, sys->sys
+                
+                .Pigeon2(g->g.CanNumber(14))
+
+                .SwerveDrive(sd->sd
+                    .Chassis(c -> c
+                        .Square(19.75)
+                        .WheelDiameter(4.0)
+                    )
+                    .SwerveModule("Module#1", sm->sm
+                        .CanNumber(4)
+                    )
+                    .SwerveModule("Module#2", sm->sm
+                        .CanNumber(6)
+                    )
+                    .SwerveModule("Module#3", sm->sm
+                        .CanNumber(8)
+                    )
+                    .SwerveModule("Module#4", sm->sm
+                        .CanNumber(10)
+                    )
+                )
             )
-            .SwerveModule("Module#1", sm->sm
-                .CanNumber(4)
-            )
-            .SwerveModule("Module#2", sm->sm
-                .CanNumber(6)
-            )
-            .SwerveModule("Module#3", sm->sm
-                .CanNumber(8)
-            )
-            .SwerveModule("Module#4", sm->sm
-                .CanNumber(10)
-            )
-            .TopSpeed(4.6)
-        ));
+        );
     }
 }
