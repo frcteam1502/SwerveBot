@@ -17,8 +17,9 @@ public class SwerveBot {
         .SwerveDrive(sd->sd
             .Chassis(c -> c
                 .Square(19.75) // for wheel distances
-                .Frame(25.25) // PathPlanner needs the full frame
-                .WheelDiameter(4.0)
+                .Frame(25.25) // base frame
+                //.Bumpers(3.0) // PathPlanner needs the full frame
+                //.WheelDiameter(4.0) included in SwerveModule
             )
             .SwerveModule("Module#1", sm->sm
                 .CanNumber(4)
@@ -32,7 +33,7 @@ public class SwerveBot {
             .SwerveModule("Module#4", sm->sm
                 .CanNumber(10)
             )
-            .TopSpeed(4.6)
+            .TopSpeed(4.6) // empirical speed of fully loaded / fully charge robot
         ));
     }
 }
