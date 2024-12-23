@@ -7,15 +7,13 @@ import frc.robot.subsystems.DriveSubsystem;
 public class SwerveBot {
 
     public static RobotConfiguration buildRobot() {
-        RobotConfiguration robotConfiguration = RobotConfiguration.Create("swerveTest1", fn -> fn
-            .Parts(inventory -> {
-                Inventory.Motors(inventory);
-                Inventory.Mk4iL3(inventory);
-                return inventory;
-            }
-        ));
-
-        return robotConfiguration.Build(builder->builder
+        return RobotConfiguration.Create("swerveBot", fn->fn
+        .Parts(inventory -> 
+                Inventory.Mk4iL3(
+                Inventory.Motors(inventory)
+            )
+        )
+        .Build(builder->builder
             .Subsystem(DriveSubsystem.class, sys->sys
                 
                 .Pigeon2(g->g.CanNumber(14))
@@ -39,6 +37,6 @@ public class SwerveBot {
                     )
                 )
             )
-        );
+        ));
     }
 }
