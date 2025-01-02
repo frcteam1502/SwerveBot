@@ -2,23 +2,9 @@ package frc.robot.hardware;
 
 import org.team1502.configuration.CAN.Manufacturer;
 import org.team1502.configuration.builders.motors.Motor;
-import org.team1502.configuration.builders.motors.MotorController;
-import org.team1502.configuration.builders.motors.SwerveDrive;
-import org.team1502.hardware.SwerveModule;
-import org.team1502.hardware.SwerveModules;
-import org.team1502.configuration.builders.motors.SwerveModuleBuilder;
-
 import org.team1502.configuration.factory.PartFactory;
-import org.team1502.configuration.factory.RobotConfiguration;
-
 import com.revrobotics.spark.SparkLowLevel.MotorType;
-import com.revrobotics.RelativeEncoder;
-import com.revrobotics.spark.SparkMax;
 import com.revrobotics.spark.config.SparkBaseConfig.IdleMode;
-
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 
 public class Inventory {
     public static PartFactory Sensors(PartFactory inventory) {return inventory
@@ -46,7 +32,7 @@ public class Inventory {
             .TurningMotor(Manufacturer.REVRobotics, mc -> mc
                 .Motor(Motor.NEO550)
                 .IdleMode(IdleMode.kCoast)
-                .Reversed() // all turn motors are reversed
+                .Reversed() // swerve rotation is CCW
                 .GearBox(g-> g
                     .Gear("Stage1", 14, 50)
                     .Gear("Stage2", 10, 60)
@@ -60,7 +46,6 @@ public class Inventory {
             .DrivingMotor(Manufacturer.REVRobotics, mc -> mc
                 .Motor(Motor.VORTEX)
                 .IdleMode(IdleMode.kBrake)
-                .Reversed() // all drive motors are reversed
                 .GearBox(g-> g
                     .Gear("Stage1", 14, 50)
                     .Gear("Stage2", 28, 16)

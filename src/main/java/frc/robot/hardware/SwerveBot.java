@@ -21,19 +21,18 @@ public class SwerveBot {
                 .SwerveDrive(sd->sd
                     .Chassis(c -> c
                         .Square(19.75)
-                        .WheelDiameter(4.0)
                     )
                     .SwerveModule("Module#1", sm->sm
-                        .CanNumber(4)
+                        .CanNumber(16)
                     )
                     .SwerveModule("Module#2", sm->sm
-                        .CanNumber(6)
+                        .CanNumber(10)
                     )
                     .SwerveModule("Module#3", sm->sm
-                        .CanNumber(8)
+                        .CanNumber(4)
                     )
                     .SwerveModule("Module#4", sm->sm
-                        .CanNumber(10)
+                        .CanNumber(8)
                     )
                 )
             )

@@ -1,71 +1,62 @@
 package frc.robot.subsystems;
 
-import org.team1502.configuration.builders.motors.SwerveDrive;
-import org.team1502.configuration.factory.RobotConfiguration;
-import org.team1502.hardware.SwerveModules;
+import org.team1502.swerve.SwerveDrive;
 
+import java.util.function.Supplier;
+
+import org.team1502.configuration.factory.RobotConfiguration;
 import com.ctre.phoenix6.hardware.Pigeon2;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.units.measure.Angle;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 public class DriveSubsystem extends SubsystemBase {
     final Pigeon2 gyro;
-    final SwerveDriveKinematics kinematics;
-    final double maxFreeSpeed;
-    /** adjustable 0 to max achievable speed */
-    double maxSpeed;
+    
+    /** generic Angle in degrees */
+    final Supplier<Angle> gyroYaw;
+    
+    /** generic Rotation2d in radians */
+    final Supplier<Rotation2d> gyroRotation2d;
 
+    final SwerveDrive swerveDrive;
+    
 
     public DriveSubsystem(RobotConfiguration configuration) {
+        // initialize IMU and get Yaw supplier
         gyro = configuration.Pigeon2().buildPigeon2();
-        SwerveDrive swerveDrive = configuration.SwerveDrive();
-        SwerveModules swerveModules = new SwerveModules(swerveDrive);
-        kinematics = swerveDrive.getKinematics();
-        maxFreeSpeed = swerveDrive.calculateMaxSpeed();
-        maxSpeed = maxFreeSpeed * 0.6; // TODO: determine empirically
+        var statusCode  = gyro.setYaw(0); // whichever way we are pointing is 0 (+X direction)
+        gyroYaw = gyro.getYaw().asSupplier();
+        gyroRotation2d = ()->new Rotation2d(gyroYaw.get());
+
+        // initialize swerve drive
+        swerveDrive = configuration.SwerveDrive().buildSwerveDrive(gyroRotation2d);
     }
 
 
-    public void drive(double xSpeed, double ySpeed, double rotationSpeed, boolean fieldRelative) {
+    @Override
+    public void periodic() {
+        swerveDrive.periodic(); // e.g., update odometry
+    }
 
-        ChassisSpeeds speedCommands = new ChassisSpeeds(xSpeed, ySpeed, rotationSpeed);
-        if(fieldRelative){
-            speedCommands.toRobotRelativeSpeeds(getGyroRotation2d());
+    /** Chassis "unit" velocities (-1 .. +1 ) for X (forward), Y (left), and Omega (ccw) */
+    public void swerveDrive(double forwardUnitVelocity, double leftUnitVelocity, double ccwUnitVelocity) {
+        swerveDrive.swerveDrive(forwardUnitVelocity, leftUnitVelocity, ccwUnitVelocity);
+    }
+
+    public void drive(double vxMetersPerSecond, double vyMetersPerSecond, double omegaRadiansPerSecond, boolean fieldRelative) {
+        ChassisSpeeds speedCommands = new ChassisSpeeds(vxMetersPerSecond, vyMetersPerSecond, omegaRadiansPerSecond);
+        if (fieldRelative){
+            speedCommands.toRobotRelativeSpeeds(gyroRotation2d.get());
         }
         driveRobotRelative(speedCommands);
     }
 
-    public void driveRobotRelative(ChassisSpeeds robotRelativeSpeeds){
-        //This method is a consumer of ChassisSpeed and sets the corresponding module states.  This is required for PathPlanner 2024
-
-        //Convert from robot frame of reference (ChassisSpeeds) to swerve module frame of reference (SwerveModuleState)
-        var swerveModuleStates = kinematics.toSwerveModuleStates(robotRelativeSpeeds);
-        //Normalize wheel speed commands to make sure no speed is greater than the maximum achievable wheel speed.
-        SwerveDriveKinematics.desaturateWheelSpeeds(swerveModuleStates, maxSpeed);
-        //Set the speed and angle of each module
-        setDesiredState(swerveModuleStates);
-    }
-
-    public Rotation2d getGyroRotation2d() {
-        return new Rotation2d(Units.degreesToRadians(getIMU_Yaw()));
-    }
-
-    public Pose2d getPose2d() {
-        return odometry.getEstimatedPosition();
-    }
-
-    public void resetGyro() {
-        gyro.setYaw(0);
-    }
-
-    public void reset() {
-        resetGyro();
-        resetModules();
-        resetOdometry(pose);
-  }  
+    public void driveRobotRelative(ChassisSpeeds speedCommands)
+    {
+        this.swerveDrive.driveRobotRelative(speedCommands);
+    } 
 
 }
