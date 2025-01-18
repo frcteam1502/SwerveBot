@@ -1,7 +1,7 @@
 package frc.testmode.swerve;
 
 import com.revrobotics.spark.SparkMax;
-//import com.revrobotics.spark.SparkSim; //REVPhysicsSim;
+import com.revrobotics.spark.SparkSim;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.util.sendable.Sendable;
@@ -13,6 +13,8 @@ import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.FunctionalCommand;
 import edu.wpi.first.wpilibj2.command.InstantCommand;
 import edu.wpi.first.wpilibj2.command.Subsystem;
+import frc.robot.Robot;
+
 import org.team1502.configuration.builders.motors.SwerveModuleBuilder;
 import org.team1502.configuration.factory.RobotConfiguration;
 import org.team1502.injection.RobotFactory;
@@ -269,16 +271,13 @@ public class AbsoluteEncoderAlignment implements Subsystem, Sendable {
             if (Math.abs(turnOutput) < 0.01) {
                 turning--;
             }
-            /*
             if (Robot.isSimulation()) {
-                REVPhysicsSim.getInstance().run();
                 var simPosition = getTurning().getEncoder().getPosition();
                 var simState = module.Encoder().CANcoder().getSimState();
                 var deltaPosition = simPosition - lastPostion;
                 lastPostion = simPosition;
                 simState.addPosition(deltaPosition); //turnOutput/360);
             }
-             */
         }
         public void drive() {
             //var circumference = module.DrivingMotor().findDouble(MotorController.wheelDiameter, 0.0) * Math.PI;

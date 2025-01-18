@@ -7,6 +7,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import frc.testmode.diagnostics;
 
 public class Robot extends TimedRobot {
   private Command m_autonomousCommand;
@@ -73,10 +74,11 @@ public class Robot extends TimedRobot {
   @Override
   public void testInit() {
     CommandScheduler.getInstance().cancelAll();
-    m_testCommand = m_robotContainer.getTestCommand();
-    if (m_testCommand != null) {
-      m_testCommand.schedule();
-    }
+    diagnostics.enterTestMode();
+    // m_testCommand = m_robotContainer.getTestCommand();
+    // if (m_testCommand != null) {
+    //   m_testCommand.schedule();
+    // }
   }
 
   @Override
@@ -87,5 +89,6 @@ public class Robot extends TimedRobot {
     if (m_testCommand != null) {
       m_testCommand.cancel();
     }
+    diagnostics.exitTestMode();
   }
 }

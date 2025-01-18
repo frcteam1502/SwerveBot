@@ -18,8 +18,8 @@ import frc.robot.subsystems.DriveSubsystem;
 import frc.testmode.swerve.AbsoluteEncoderAlignment;
 
 public class RobotContainer {
-    RobotFactory robotFactory;
-    RobotConfiguration robotConfiguration;
+    public static RobotFactory robotFactory;
+    public static RobotConfiguration robotConfiguration;
 
     public RobotContainer() {
         robotConfiguration = SwerveBot.buildRobot();
